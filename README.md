@@ -5,10 +5,31 @@ busca rápida. Resolve o clássico *"onde foi que eu guardei aquele comando dock
 
 Funciona de dois jeitos, compartilhando o mesmo banco de dados:
 
-- **Interface gráfica** (Tkinter) — busca incremental, editor, copiar com um clique.
-- **Terminal** (CLI) — `add`, `list`, `search`, `copy`, `show`, `edit`, `rm`, `tags`.
+- **Interface gráfica** (Tkinter) — busca incremental, editor com realce de
+  sintaxe, filtro por tags, tema claro/escuro, copiar com um clique.
+- **Terminal** (CLI) — `add`, `list`, `search`, `show`, `copy`, `cat`, `run`,
+  `edit`, `rm`, `pin`/`unpin`, `history`, `tags`, `export`, `import`, `complete`.
 
-Sem dependências externas: só Python 3.10+ (com Tkinter, que já vem no Python oficial).
+Sem dependências externas: só Python 3.10+ (com Tkinter, que já vem no Python
+oficial). O realce de sintaxe usa `pygments` se estiver instalado, mas tem um
+realce nativo embutido como fallback.
+
+## Funcionalidades
+
+- **Busca avançada** — por campo (`--in title`), filtro combinado
+  (`--tag` + `--lang`), operadores na query (`tag:docker lang:bash in:title up`)
+  e busca tolerante a erros (`--fuzzy`).
+- **Organização** — snippets fixados (`pin`), contador de uso e ordenação
+  (`--sort recent|used|created|title|relevance`), recentes (`list --recent N`).
+- **Placeholders** — `docker run {{image}}` preenchido na hora do `copy`/`run`
+  (interativo ou via `--var image=nginx`).
+- **Descrição** separada do conteúdo, **histórico de versões** com restauração
+  (`history <id> --restore N`) e **detecção automática de linguagem** (`--detect`).
+- **Pipeline** — `cat <id>` joga o conteúdo no stdout, `run <id>` executa o
+  comando (com confirmação), `--json` em `list`/`search`/`show`, `export`/`import`
+  (JSON e Markdown/cookbook).
+- **Robustez** — aviso de duplicado ao adicionar, lock de arquivo entre CLI e
+  GUI, e migração de schema versionada no JSON.
 
 ## Armazenamento
 
@@ -38,6 +59,33 @@ python snippetbox.py rm <id> -y
 
 # todas as tags
 python snippetbox.py tags
+```
+
+### Busca, organização e pipeline
+
+```bash
+# busca por campo, filtro combinado, operadores e fuzzy
+python snippetbox.py search "git" --in title
+python snippetbox.py search "subir" --tag docker --lang bash
+python snippetbox.py search "tag:docker lang:bash in:title up"
+python snippetbox.py search "dcoker" --fuzzy
+
+# fixar, recentes, mais usados, JSON
+python snippetbox.py pin <id>
+python snippetbox.py list --recent 10 --sort used
+python snippetbox.py list --json
+
+# placeholders, stdout e execução
+python snippetbox.py copy <id> --var image=nginx
+python snippetbox.py cat <id> | bash
+python snippetbox.py run <id>            # pede confirmação
+
+# histórico, export/import, autocompletar
+python snippetbox.py history <id>
+python snippetbox.py history <id> --restore 0
+python snippetbox.py export --format md -o cookbook.md
+python snippetbox.py import backup.json
+python snippetbox.py complete bash >> ~/.bashrc
 ```
 
 O `<id>` pode ser o id completo ou um prefixo único.

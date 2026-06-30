@@ -5,6 +5,11 @@ description = "Gerenciador pessoal de snippets de codigo, comandos e scripts (CL
 requires-python = ">=3.10"
 dependencies = []
 
+[project.optional-dependencies]
+# realce de sintaxe melhorado (opcional; ha fallback nativo sem isto)
+highlight = ["pygments>=2.0"]
+test = ["pytest>=7.0"]
+
 [project.scripts]
 snippetbox = "snippetbox.cli:main"
 
