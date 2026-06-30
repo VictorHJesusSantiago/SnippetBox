@@ -1,0 +1,13 @@
+[project]
+name = "snippetbox"
+version = "1.0.0"
+description = "Gerenciador pessoal de snippets de codigo, comandos e scripts (CLI + GUI)."
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+snippetbox = "snippetbox.cli:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
